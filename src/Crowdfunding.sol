@@ -5,14 +5,14 @@ import "./Modifiers.sol";
 
 contract CrowdFunding is Modifiers {
     function createCampaign(uint _goal, uint256 _deadline) external {
-        campaignCount++;
-
         Campaign storage c = campaigns[campaignCount];
         c.creator = payable(msg.sender);
         c.goal = _goal;
         c.pledged = 0;
         c.deadline = block.timestamp + _deadline;
         c.claimed = false;
+
+        campaignCount++;
     }
 
     function pledge(uint _campaignId) external payable 
@@ -43,8 +43,7 @@ contract CrowdFunding is Modifiers {
         campaigns[_campaignId].contributions[msg.sender] = 0;
     }
 
-    function getCampaign(uint _campaignId) external view
-        beforeDeadline(_campaignId) 
+    function getCampaign(uint _campaignId) external view 
         returns (address, uint, uint, uint256, bool) 
     {
         Campaign storage c = campaigns[_campaignId];
