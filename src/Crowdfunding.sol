@@ -4,7 +4,7 @@ pragma solidity ^0.8.2;
 import "./Modifiers.sol";
 
 contract CrowdFunding is Modifiers {
-    function createCampaign(uint _goal, uint256 _deadline) external {
+    function createCampaign(uint _goal, uint256 _deadline) external returns (uint) {
         Campaign storage c = campaigns[campaignCount];
         c.creator = payable(msg.sender);
         c.goal = _goal;
@@ -13,6 +13,7 @@ contract CrowdFunding is Modifiers {
         c.claimed = false;
 
         campaignCount++;
+        return (campaignCount - 1);
     }
 
     function pledge(uint _campaignId) external payable 
