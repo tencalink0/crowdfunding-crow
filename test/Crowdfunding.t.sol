@@ -12,8 +12,8 @@ contract CrowdFundingTest is Test {
     address public addr2;
     address public addr3;
 
-    uint public id1;
-    uint public id2;
+    uint256 public id1;
+    uint256 public id2;
 
     function setUp() public {
         cand1 = address(0x001);
@@ -37,7 +37,7 @@ contract CrowdFundingTest is Test {
         vm.prank(addr1);
         crowdfunding.pledge{value: 0.3 ether}(id1);
 
-        (, , uint pledged1, ,) = crowdfunding.getCampaign(id1);
+        (,, uint256 pledged1,,) = crowdfunding.getCampaign(id1);
         assertEq(pledged1, 0.3 ether);
 
         vm.prank(addr2);
@@ -45,7 +45,7 @@ contract CrowdFundingTest is Test {
         vm.prank(addr3);
         crowdfunding.pledge{value: 0.3 ether}(id2);
 
-        (, , uint pledged2, ,) = crowdfunding.getCampaign(id2);
+        (,, uint256 pledged2,,) = crowdfunding.getCampaign(id2);
         assertEq(pledged2, 1.1 ether);
     }
 

@@ -4,7 +4,7 @@ pragma solidity ^0.8.2;
 import "./Modifiers.sol";
 
 contract CrowdFunding is Modifiers {
-    function createCampaign(uint _goal, uint256 _deadline) external returns (uint) {
+    function createCampaign(uint256 _goal, uint256 _deadline) external returns (uint256) {
         Campaign storage c = campaigns[campaignCount];
         c.creator = payable(msg.sender);
         c.goal = _goal;
@@ -16,15 +16,13 @@ contract CrowdFunding is Modifiers {
         return (campaignCount - 1);
     }
 
-    function pledge(uint _campaignId) external payable 
-        beforeDeadline(_campaignId) 
-        ethTransered
-    {
+    function pledge(uint256 _campaignId) external payable beforeDeadline(_campaignId) ethTransered {
         campaigns[_campaignId].pledged += msg.value;
     }
 
-    function claimFunds(uint _campaignId) external 
-        afterDeadline(_campaignId) 
+    function claimFunds(uint256 _campaignId)
+        external
+        afterDeadline(_campaignId)
         notClaimed(_campaignId)
         goalMet(_campaignId)
         onlyCreator(_campaignId)
@@ -33,27 +31,20 @@ contract CrowdFunding is Modifiers {
         c.creator.transfer(c.pledged);
     }
 
-    function refund(uint _campaignId) external 
-        afterDeadline(_campaignId) 
+    function refund(uint256 _campaignId)
+        external
+        afterDeadline(_campaignId)
         goalNotMet(_campaignId)
         fundsAvailable(_campaignId)
     {
-        uint contribution = campaigns[_campaignId].contributions[msg.sender];
+        uint256 contribution = campaigns[_campaignId].contributions[msg.sender];
         payable(msg.sender).transfer(contribution);
         campaigns[_campaignId].pledged -= contribution;
         campaigns[_campaignId].contributions[msg.sender] = 0;
     }
 
-    function getCampaign(uint _campaignId) external view 
-        returns (address, uint, uint, uint256, bool) 
-    {
+    function getCampaign(uint256 _campaignId) external view returns (address, uint256, uint256, uint256, bool) {
         Campaign storage c = campaigns[_campaignId];
-        return (
-            c.creator,
-            c.goal,
-            c.pledged,
-            c.deadline,
-            c.claimed
-        );
+        return (c.creator, c.goal, c.pledged, c.deadline, c.claimed);
     }
 }
